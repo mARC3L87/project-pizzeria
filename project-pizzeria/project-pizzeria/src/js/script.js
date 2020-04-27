@@ -94,13 +94,15 @@
       //console.log('cart:', thisProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       //console.log('price:', thisProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      console.log('image: ', thisProduct.imageWrapper);
     }
     initAccordion(){
       const thisProduct = this;
       //console.log('this product:', thisProduct);
       /* find the clickable trigger (the element that should react to clicking */
       const accordionTrigger = thisProduct.accordionTrigger;
-      console.log('accordion trigger: ', accordionTrigger);
+      //console.log('accordion trigger: ', accordionTrigger);
       /* START: click event listener to trigger */
       accordionTrigger.addEventListener('click', function(event){
         /* prevent default action for event */
@@ -128,14 +130,14 @@
     }
     initOrderForm(){
       const thisProduct = this;
-      console.log('order form:', thisProduct);
+      //console.log('order form:', thisProduct);
       thisProduct.form.addEventListener('submit', function(event){
         event.preventDefault();
         thisProduct.processOrder();
       });
 
       for(let input of thisProduct.formInputs){
-        console.log('input:', input);
+        //console.log('input:', input);
         input.addEventListener('change', function(){
           thisProduct.processOrder();
         });
@@ -148,27 +150,27 @@
     }
     processOrder(){
       const thisProduct = this;
-      console.log('process order:', thisProduct);
+      //console.log('process order:', thisProduct);
       const formData = utils.serializeFormToObject(thisProduct.form);
-      console.log('formData:', formData);
+      //console.log('formData:', formData);
       /* create variable with default price */
       let defaultPrice = thisProduct.data.price;
-      console.log('defaultPrice: ', defaultPrice);
+      //console.log('defaultPrice: ', defaultPrice);
       /*START LOOP: for each paramId in thisProduct.data.params */
       for(let paramId in thisProduct.data.params){
-        console.log('paramId:', paramId);
+        //console.log('paramId:', paramId);
         /* save the element in thisProduct.data.params with key paramId as const param */
         const param = thisProduct.data.params[paramId];
-        console.log('param:', param);
+        //console.log('param:', param);
         /*START LOOP: for each optionId in param.options */
         for(let optionId in param.options){
-          console.log('option Id:', optionId);
+          //console.log('option Id:', optionId);
           /* save the element in param.options with key optionId as a const option */
           const option = param.options[optionId];
-          console.log('option:', option);
+          //console.log('option:', option);
           /* START IF: if option is selected and option is not default */
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
-          console.log('optionSelected:', optionSelected);
+          //console.log('optionSelected:', optionSelected);
           if(optionSelected && !option.default){
             /* add price of option to variable price */
             defaultPrice += option.price;
@@ -180,13 +182,37 @@
             defaultPrice -= option.price;
             /* END ELSE IF: if option is not selected and option is default */
           }
+          /* create new const imageSelected with all img */
+          const imageVisibility = classNames.menuProduct.imageVisible;
+          console.log('image visibility: ', imageVisibility);
+          const imageSelected = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+          console.log('imageSelected:', imageSelected);
+          /* START IF: if option is selected */
+          if(optionSelected){
+          /* START LOOP: for each image */
+            for(let image of imageSelected){
+              console.log('image:', image);
+              image.classList.add(imageVisibility);
+              /* END LOOP: for each image */
+            }
+            /* END IF: if option is selected */
+          }
+          /* START ELSE: if option is not selected */
+          else {
+            /* START LOOP: for each image */
+            for(let image of imageSelected){
+              image.classList.remove(imageVisibility);
+              /*END LOOP: for each image */
+            }
+            /* END ELSE: if option is not selected */
+          }
         /* END LOOP: for each optionId in param.options */
         }
       /*END LOOP: for each paramId in thisProduct.data.params */
       }
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerHTML = defaultPrice;
-      console.log('price elem html:', thisProduct.priceElem.innerHTML);
+      //console.log('price elem html:', thisProduct.priceElem.innerHTML);
     }
   }
   const app = {
