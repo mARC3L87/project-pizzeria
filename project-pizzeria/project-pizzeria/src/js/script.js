@@ -61,6 +61,7 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
       //console.log('new Product: ', thisProduct);
     }
@@ -95,7 +96,9 @@
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       //console.log('price:', thisProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-      console.log('image: ', thisProduct.imageWrapper);
+      //console.log('image: ', thisProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+      console.log('widget:', thisProduct.amountWidgetElem);
     }
     initAccordion(){
       const thisProduct = this;
@@ -184,14 +187,14 @@
           }
           /* create new const imageSelected with all img */
           const imageVisibility = classNames.menuProduct.imageVisible;
-          console.log('image visibility: ', imageVisibility);
+          //console.log('image visibility: ', imageVisibility);
           const imageSelected = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
-          console.log('imageSelected:', imageSelected);
+          //console.log('imageSelected:', imageSelected);
           /* START IF: if option is selected */
           if(optionSelected){
           /* START LOOP: for each image */
             for(let image of imageSelected){
-              console.log('image:', image);
+              //console.log('image:', image);
               image.classList.add(imageVisibility);
               /* END LOOP: for each image */
             }
@@ -210,9 +213,70 @@
         }
       /*END LOOP: for each paramId in thisProduct.data.params */
       }
+      /* multiply price by amount */
+      defaultPrice *= thisProduct.amountWidget.value;
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerHTML = defaultPrice;
       //console.log('price elem html:', thisProduct.priceElem.innerHTML);
+    }
+    initAmountWidget(){
+      const thisProduct = this;
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+      console.log('init amount:', thisProduct.amountWidget);
+      thisProduct.amountWidgetElem.addEventListener('updated', function(){
+        thisProduct.processOrder();
+      });
+    }
+  }
+  class AmountWidget{
+    constructor(element){
+      const thisWidget = this;
+      thisWidget.getElements(element);
+      thisWidget.value = settings.amountWidget.defaultValue;
+      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.initActions();
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments: ', element);
+    }
+    getElements(element){
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+    setValue(value){
+      const thisWidget = this;
+
+      const newValue = parseInt(value);
+      console.log('new value:', newValue);
+      /* TODO: Add validation */
+      if(newValue != thisWidget.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax){
+      thisWidget.value = newValue;
+      thisWidget.announce();
+    }
+      thisWidget.input.value = thisWidget.value;
+    }
+    initActions(){
+      const thisWidget = this;
+      thisWidget.input.addEventListener('change', function(){
+        thisWidget.setValue(thisWidget.input.value);
+      });
+      thisWidget.linkDecrease.addEventListener('click', function(){
+        thisWidget.setValue(thisWidget.value - 1);
+      });
+      thisWidget.linkIncrease.addEventListener('click', function(){
+        thisWidget.setValue(thisWidget.value + 1);
+      });
+
+    }
+    announce(){
+      const thisWidget = this;
+
+      const event = new Event('updated');
+      console.log('event:', event);
+      thisWidget.element.dispatchEvent(event);
     }
   }
   const app = {
