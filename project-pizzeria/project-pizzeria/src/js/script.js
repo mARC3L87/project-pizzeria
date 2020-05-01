@@ -177,6 +177,7 @@
       thisProduct.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
     processOrder(){
@@ -184,6 +185,7 @@
       //console.log('process order:', thisProduct);
       const formData = utils.serializeFormToObject(thisProduct.form);
       //console.log('formData:', formData);
+      thisProduct.params = {};
       /* create variable with default price */
       let defaultPrice = thisProduct.data.price;
       //console.log('defaultPrice: ', defaultPrice);
@@ -220,6 +222,13 @@
           //console.log('imageSelected:', imageSelected);
           /* START IF: if option is selected */
           if(optionSelected){
+            if(!thisProduct.params[paramId]){
+              thisProduct.params[paramId] = {
+                label: param.label,
+                options: {},
+              };
+            }
+            thisProduct.params[paramId].options[optionId] = option.label;
           /* START LOOP: for each image */
             for(let image of imageSelected){
               //console.log('image:', image);
@@ -242,10 +251,15 @@
       /*END LOOP: for each paramId in thisProduct.data.params */
       }
       /* multiply price by amount */
-      defaultPrice *= thisProduct.amountWidget.value;
+      //defaultPrice *= thisProduct.amountWidget.value;
+      thisProduct.priceSingle = defaultPrice;
+      //console.log('thisProduct Single:', thisProduct.priceSingle);
+      thisProduct.defaultPrice = thisProduct.priceSingle * thisProduct.amountWidget.value;
+      //console.log('thisProduckt default price:', thisProduct.defaultPrice);
       /* set the contents of thisProduct.priceElem to be the value of variable price */
-      thisProduct.priceElem.innerHTML = defaultPrice;
+      thisProduct.priceElem.innerHTML = thisProduct.defaultPrice;
       //console.log('price elem html:', thisProduct.priceElem.innerHTML);
+      console.log('thisProduct params:', thisProduct.params);
     }
     initAmountWidget(){
       const thisProduct = this;
@@ -254,6 +268,16 @@
       thisProduct.amountWidgetElem.addEventListener('updated', function(){
         thisProduct.processOrder();
       });
+    }
+    addToCart(){
+      const thisProduct = this;
+      thisProduct.name = thisProduct.data.name;
+      console.log('product name:', thisProduct.name);
+      thisProduct.amount = thisProduct.amountWidget.value;
+      console.log('product amount:', thisProduct.amount);
+      thisProduct.price = thisProduct.defaultPrice;
+      console.log('product price:', thisProduct.price);
+      app.cart.add(thisProduct);
     }
   }
   class AmountWidget{
@@ -313,6 +337,7 @@
       //console.log('event:', event);
       thisWidget.element.dispatchEvent(event);
     }
+  
   }
   class Cart{
     constructor(element){
@@ -331,9 +356,11 @@
       thisCart.dom = {};
 
       thisCart.dom.wrapper = element;
-      console.log('thisCart wrapper:', thisCart.dom.wrapper);
+      //console.log('thisCart wrapper:', thisCart.dom.wrapper);
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-      console.log('thisCart trigger:', thisCart.dom.toggleTrigger);
+      //console.log('thisCart trigger:', thisCart.dom.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+      console.log('cart product list:', thisCart.dom.productList);
     }
     initActions(){
       const thisCart = this;
@@ -342,7 +369,19 @@
         thisCart.dom.wrapper.classList.toggle('active');
       });
     }
-
+    add(menuProduct){
+      const thisCart = this;
+      console.log('adding product:', menuProduct);
+      /* generate HTML based on template */
+      const generatedHTML = templates.cartProduct(menuProduct);
+      console.log('generateHTML: ', generatedHTML);
+      /* create element using utils.createElementFromHTML */
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      console.log('generated dom:', generatedDOM);
+      /* add element to cart */
+      thisCart.dom.productList.appendChild(generatedDOM);
+      console.log('cart add:', thisCart.dom.productList.appendChild(generatedDOM));
+    }
   }
   const app = {
     initMenu: function(){
@@ -363,7 +402,7 @@
     },
     initCart: function(){
       const thisApp = this;
-      const cartElem = document.querySelector(select.containerOf.cart)
+      const cartElem = document.querySelector(select.containerOf.cart);
       console.log('cartElem:', cartElem);
       thisApp.cart = new Cart(cartElem);
       console.log('thisApp cart:', thisApp.cart);
