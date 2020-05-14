@@ -1,3 +1,4 @@
+/* global flatpickr */
 import BaseWidget from './BaseWidget.js';
 import {select, settings} from '../settings.js';
 import {utils} from '../utils.js';
@@ -7,18 +8,15 @@ class DatePicker extends BaseWidget{
     super(wrapper, utils.dateToStr(new Date()));
     const thisWidget = this;
     thisWidget.dom.input = thisWidget.dom.wrapper.querySelector(select.widgets.datePicker.input);
-    //console.log('date input:', thisWidget.dom.input);
     thisWidget.initPlugin(); 
 
   }
   initPlugin(){
     const thisWidget = this;
     thisWidget.minDate = new Date(thisWidget.value);
-    //console.log('thisWidget.minDate:', thisWidget.minDate);
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
-    //console.log('thisWidget.maxDate:', thisWidget.maxDate);
     
-    // eslint-disable-next-line no-undef
+    
     flatpickr(thisWidget.dom.input, {
       defaultDate: thisWidget.minDate,
       minDate: thisWidget.minDate,
@@ -31,9 +29,8 @@ class DatePicker extends BaseWidget{
           return (date.getDay() === 1);
         }
       ],
-      onChange: function(dateStr){
+      onChange: function(selectedDates, dateStr){
         thisWidget.value = dateStr;
-        //console.log('on change:', thisWidget.value);
       },
       dateFormat: 'Y-m-d',
     });

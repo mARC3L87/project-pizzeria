@@ -10,9 +10,7 @@ class Cart{
       
     thisCart.getElements(element);
     thisCart.initActions();
-    //console.log('init actions:', thisCart.initActions());
     thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
-    //console.log('delivery fee:', thisCart.deliveryFee);
     console.log('new Cart:', thisCart);
   }
   getElements(element){
@@ -21,25 +19,18 @@ class Cart{
     thisCart.dom = {};
 
     thisCart.dom.wrapper = element;
-    //console.log('thisCart wrapper:', thisCart.dom.wrapper);
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-    //console.log('thisCart trigger:', thisCart.dom.toggleTrigger);
     thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
-    //console.log('cart product list:', thisCart.dom.productList);
     thisCart.renderTotalKeys = ['totalNumber', 'totalPrice', 'subtotalPrice', 'deliveryFee'];
     for(let key of thisCart.renderTotalKeys){
       thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(select.cart[key]);
     }
     thisCart.dom.form = thisCart.dom.wrapper.querySelector(select.cart.form);
-    //console.log('car form:', thisCart.dom.form);
     thisCart.dom.address = thisCart.dom.wrapper.querySelector(select.cart.address);
-    //console.log('cart address:', thisCart.dom.address);
     thisCart.dom.phone = thisCart.dom.wrapper.querySelector(select.cart.phone);
-    //console.log('cart phone:', thisCart.dom.phone);
   }
   initActions(){
     const thisCart = this;
-    //console.log('action cart:', thisCart);
     thisCart.dom.toggleTrigger.addEventListener('click', function(){
       thisCart.dom.wrapper.classList.toggle('active');
     });
@@ -56,18 +47,13 @@ class Cart{
   }
   add(menuProduct){
     const thisCart = this;
-    //console.log('adding product:', menuProduct);
     /* generate HTML based on template */
     const generatedHTML = templates.cartProduct(menuProduct);
-    //console.log('generateHTML: ', generatedHTML);
     /* create element using utils.createElementFromHTML */
     const generatedDOM = utils.createDOMFromHTML(generatedHTML);
-    //console.log('generated dom:', generatedDOM);
     /* add element to cart */
     thisCart.dom.productList.appendChild(generatedDOM);
-    //console.log('cart add:', thisCart.dom.productList.appendChild(generatedDOM));
     thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-    //console.log('thisCart.products:', thisCart.products);
     thisCart.update();
   }
   update(){
@@ -81,9 +67,6 @@ class Cart{
       thisCart.totalNumber += product.amount;
     }
     thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
-    //console.log('total number:', thisCart.totalNumber);
-    //console.log('subtotal price:', thisCart.subtotalPrice);
-    //console.log('total price:', thisCart.totalPrice);
     for(let key of thisCart.renderTotalKeys){
       for(let elem of thisCart.dom[key]){
         elem.innerHTML = thisCart[key];

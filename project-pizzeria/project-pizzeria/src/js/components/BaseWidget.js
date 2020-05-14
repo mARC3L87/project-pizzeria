@@ -14,7 +14,6 @@ class BaseWidget{
     const thisWidget = this;
 
     const newValue = thisWidget.parseValue(value);
-    //console.log('new value:', newValue);
     /* TODO: Add validation */
     if(newValue != thisWidget.correctValue && thisWidget.isValid(newValue)){
       thisWidget.correctValue = newValue;
@@ -37,7 +36,6 @@ class BaseWidget{
   renderValue(){
     const thisWidget = this;
     thisWidget.dom.wrapper.innerHTML = thisWidget.value;
-    //console.log(' widget input value:', thisWidget .input.value);
   }
   announce(){
     const thisWidget = this;
@@ -45,7 +43,6 @@ class BaseWidget{
     const event = new CustomEvent('updated', {
       bubbles: true
     });
-    //console.log('event:', event);
     thisWidget.dom.wrapper.dispatchEvent(event);
   }
   
