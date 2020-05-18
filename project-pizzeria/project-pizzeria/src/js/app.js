@@ -88,6 +88,27 @@ const app = {
     console.log('booking container:', bookingContainer);
     thisApp.booking = new Booking(bookingContainer);
   },
+  initCarousel: function(){
+    let currentSlide = 0; 
+    // eslint-disable-next-line no-undef
+    carouselreviewSlides();
+    function carouselreviewSlides() {
+      let i;
+      let reviewSlides = document.querySelectorAll(classNames.slider.sliderReview);
+      for (i = 0; i < reviewSlides.length; i++) {
+        reviewSlides[i].style.display = 'none';
+      }
+      
+      if (currentSlide < reviewSlides.length) {
+        currentSlide++;
+      } else {
+        currentSlide = 1;
+      }
+      reviewSlides[currentSlide - 1].style.display = 'block';
+      setTimeout(carouselreviewSlides, 3000);
+    } 
+    
+  },
   init: function(){
     const thisApp = this;
     console.log('*** App starting ***');
@@ -99,6 +120,7 @@ const app = {
     thisApp.initData();
     thisApp.initCart();
     thisApp.initBooking();
+    thisApp.initCarousel();
   },
 };
 

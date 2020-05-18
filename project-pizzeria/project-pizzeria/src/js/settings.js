@@ -4,6 +4,7 @@ export const select = {
     menuProduct: '#template-menu-product',
     cartProduct: '#template-cart-product',
     bookingWidget: '#template-booking-widget',
+    mainPage: 'template-main-page',
   },
   containerOf: {
     menu: '#product-list',
@@ -38,6 +39,7 @@ export const select = {
       wrapper: '.hour-picker',
       input: 'input[type="range"]',
       output: '.output',
+      slider: '.rangeSlider',
     },
   },
   cart: {
@@ -90,6 +92,9 @@ export const classNames = {
   pages: {
     active: 'active',
   },
+  slider: { 
+    sliderReview: '.carousel-review',
+  },
 };
 
 export const settings = {
@@ -112,7 +117,7 @@ export const settings = {
     tableIdAttribute: 'data-table',
   },
   db: {
-    url: '//localhost:3131',
+    url: '//' + window.location.hostname + (window.location.hostname=='localhost' ? ':3131' : ''),
     product: 'product',
     order: 'order',
     booking: 'booking',
@@ -128,4 +133,5 @@ export const templates = {
   menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
   cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   bookingWidget: Handlebars.compile(document.querySelector(select.templateOf.bookingWidget).innerHTML),
+  //mainPage: Handlebars.compile(document.querySelector(select.templateOf.mainPage).innerHTML),
 };
