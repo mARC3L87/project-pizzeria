@@ -8,6 +8,8 @@ const app = {
     const thisApp = this;
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
+    thisApp.orderLink = document.getElementById('order-link');
+    thisApp.bookLink = document.getElementById('book-link');
     const idFromHash = window.location.hash.replace('#', '');
     let pageMatchingHash = thisApp.pages[0].id;
     for(let page of thisApp.pages){
@@ -29,6 +31,20 @@ const app = {
         window.location.hash = '#/' + id;
       });
     }
+    thisApp.orderLink.addEventListener('click', function(event){
+      const clickedElement = this;
+      event.preventDefault();
+      const id = clickedElement.getAttribute('href').replace('#', '');
+      thisApp.activatePage(id);
+      window.location.hash = '#/' + id;
+    });
+    thisApp.bookLink.addEventListener('click', function(event){
+      const clickedElement = this;
+      event.preventDefault();
+      const id = clickedElement.getAttribute('href').replace('#', '');
+      thisApp.activatePage(id);
+      window.location.hash = '#/' + id;
+    });
   },
   activatePage: function(pageId){
     const thisApp= this;
@@ -91,10 +107,12 @@ const app = {
   initCarousel: function(){
     let currentSlide = 0; 
     // eslint-disable-next-line no-undef
-    carouselreviewSlides();
-    function carouselreviewSlides() {
+    carouselReviewSlides();
+    function carouselReviewSlides() {
       let i;
-      let reviewSlides = document.querySelectorAll(classNames.slider.sliderReview);
+      const reviewSlides = document.querySelectorAll(classNames.slider.sliderReview);
+      const dots = document.querySelectorAll(classNames.slider.dots);
+      //console.log(dots);
       for (i = 0; i < reviewSlides.length; i++) {
         reviewSlides[i].style.display = 'none';
       }
@@ -104,8 +122,13 @@ const app = {
       } else {
         currentSlide = 1;
       }
+      for (i = 0; i < dots.length; i++) {
+        dots[i].classList.remove('active'); 
+       
+      }
       reviewSlides[currentSlide - 1].style.display = 'block';
-      setTimeout(carouselreviewSlides, 3000);
+      dots[currentSlide - 1].classList.add('active'); 
+      setTimeout(carouselReviewSlides, 3000);
     } 
     
   },

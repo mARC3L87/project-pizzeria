@@ -96,7 +96,6 @@
 .carousel-wrapper{
   display: flex;
   max-width: 100%;
-  margin: 5px 0 0 15px;
   flex-direction: column;
   flex-wrap: nowrap;
   width: 390px;
@@ -119,8 +118,17 @@
   display: flex;
   flex-direction: column;
   width: 350px;
-  margin-left: 15px;
+  margin: 50px 0 15px 30px;
+
+    h2{
+      font-size: 15px;
+    }
+  }
+
+.review-name{
+  padding-top: 30px;
 }
+
 
 .carousel-dots{
   display: flex;
@@ -128,10 +136,22 @@
   justify-content: flex-start;
   width: 100%;
   margin-top: 60px;
-  margin-left: 25px;
-  
+  margin-left: 40px;
+
   i{
-    padding: 0 7px 0 7px;
+    font-size: 10px;
+    color: #d8d5cf;
+    background: #d8d5cf;
+    border-radius: 50%;
+    height: 10px;
+    text-align: center;
+    margin: 10px;
+    transition: background 0.6s ease;
+
+    &.active{
+      color: black;
+      background: black;
+    }
   }
 }
 
@@ -170,6 +190,7 @@
   font-size: 25px;
   color: $color-light;
   opacity: 0;
+  cursor: pointer;
 }
 
 .icons .fa-heart:hover{

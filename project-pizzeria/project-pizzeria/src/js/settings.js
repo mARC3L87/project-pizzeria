@@ -94,6 +94,7 @@ export const classNames = {
   },
   slider: { 
     sliderReview: '.carousel-review',
+    dots: '.carousel-dots i',
   },
 };
 
