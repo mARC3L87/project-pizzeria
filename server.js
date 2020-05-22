@@ -6,7 +6,7 @@ const server = create();
 const router = _router('dist/db/app.json');
 const middlewares = defaults({
   static: 'dist',
-  noCors: true,
+  noCors: true
 });
 const port = process.env.PORT || 3131;
 
