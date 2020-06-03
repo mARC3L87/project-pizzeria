@@ -128,7 +128,7 @@ class Booking{
         table.classList.remove(classNames.booking.tableBooked);
       }
     }
-    thisBooking.rangeSliderColour();
+    thisBooking.rangeSlider();
   }
   render(bookingContainer){
     const thisBooking = this;
@@ -220,40 +220,36 @@ class Booking{
         //thisBooking.makeBooked(sendPayload.date, sendPayload.hour, sendPayload.duration, sendPayload.table);
       });
   }
-  rangeSliderColour() {
+  rangeSlider(){
     const thisBooking = this;
+    const bookedRange = thisBooking.booked[thisBooking.date];
+    const colors = [];
 
-    thisBooking.date = thisBooking.datePicker.value;
-    //console.log('today is:', thisBooking.date);
-    const bookedHours = thisBooking.booked[thisBooking.date];
-    //console.log('hours booked today: ', bookedHours);
+    const rangeSlider  = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.rangeSlider);
 
-    thisBooking.dom.rangeSlider = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.slider);
-    //console.log(thisBooking.dom.rangeSlider);
+    for (let bookedTime in bookedRange) {
+      
+      const min = 12;
+      const max = 24;
+      const step = 0.5;
+      const startValue = (((bookedTime - min) * 100) / (max - min)); 
+      const endValue = (((bookedTime - min) + step ) * 100) / (max - min); 
 
-    const sliderColours = [];
+      if (bookedTime < max) {
 
-    for (let bookedHour in bookedHours) {
-      const firstOfInterval = ((bookedHour - 12) * 100) / 12;
-      //console.log(firstOfInterval);
-      const secondOfInterval = (((bookedHour - 12) + .5) * 100) / 12;
-      if (bookedHour < 24) {
-        if (bookedHours[bookedHour].length <= 1) {
-          sliderColours.push('/*' + bookedHour + '*/green ' + firstOfInterval + '%, green ' + secondOfInterval + '%');
-          //console.log(sliderColours);
-        } else if (bookedHours[bookedHour].length === 2) {
-          sliderColours.push('/*' + bookedHour + '*/orange ' + firstOfInterval + '%, orange ' + secondOfInterval + '%');
-        } else if (bookedHours[bookedHour].length === 3) {
-          sliderColours.push('/*' + bookedHour + '*/red ' + firstOfInterval + '%, red ' + secondOfInterval + '%');
+        if (bookedRange[bookedTime].length <=  1 ) {
+          colors.push ('/*' + bookedTime + '*/green ' + startValue + '%, green ' + endValue + '%');
+        } else if (bookedRange[bookedTime].length === 2) {
+          colors.push ('/*' + bookedTime + '*/orange ' + startValue + '%, orange ' + endValue + '%');
+        } else if (bookedRange[bookedTime].length === 3) {
+          colors.push ('/*' + bookedTime + '*/red ' + startValue + '%, red ' + endValue + '%'); 
         }
       }
     }
-    sliderColours.sort();
-    const liveColours = sliderColours.join();
-
-    const slider = thisBooking.dom.rangeSlider;
-    //console.log(slider);
-    slider.style.background = 'linear-gradient(to right, ' + liveColours + ')';
+    
+    colors.sort();
+    const pushedColors = colors.join();
+    rangeSlider.style.background = 'linear-gradient(to right, ' + pushedColors + ')';
   }
 }
 
